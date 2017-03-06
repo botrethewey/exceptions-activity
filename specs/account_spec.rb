@@ -67,19 +67,20 @@ describe "Wave 1" do
       # anything at all is printed out the test will pass.
       proc {
         account.withdraw(withdrawal_amount)
-      }.must_output /.+/
+      }.must_raise InsufficientFundsError
     end
 
     it "Doesn't modify the balance if the account would go negative" do
       start_balance = 100.0
       withdrawal_amount = 200.0
       account = Bank::Account.new(1337, start_balance)
+      proc {
+        account.withdraw(withdrawal_amount)
+      }.must_raise InsufficientFundsError
 
-      updated_balance = account.withdraw(withdrawal_amount)
 
       # Both the value returned and the balance in the account
       # must be un-modified.
-      updated_balance.must_equal start_balance
       account.balance.must_equal start_balance
     end
 
